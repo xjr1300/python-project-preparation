@@ -209,8 +209,9 @@ mypy_path = ["my_package", "tests"]   # モジュールディレクトリとテ�
 インストールしたパッケージに型情報を持つ`stub`ファイル(`*.pyi`)が含まれていない場合、次の通りパッケージ単位で型チェックを無視する設定を`pyproject.toml`ファイルに追加します。
 
 ```toml
-[tool.mypy-numpy]
+[[tool.mypy.overrides]]
 ignore_missing_imports = true
+module = ["shapely.geometry"]
 ```
 
 ### 拡張機能のインストール
