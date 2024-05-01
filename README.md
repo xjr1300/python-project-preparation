@@ -44,14 +44,15 @@ poetry config virtualenvs.in-project true
 
 ## プロジェクトの準備方法
 
-次の通り、ターミナルでプロジェクトを構築して、作成したプロジェクトのルートディレクトリをカレントディレクトリに変更して、`vscode`を開きます。
+次の通り、ターミナルで`poetry`を実行してプロジェクトを作成します。
+作成されたプロジェクトディレクトリをカレントディレクトリに変更後、プロジェクトディレクトリを`vscode`を開きます。
 
 ```sh
-# `my-package`プロジェクトを作成します。
+# `my-package`プロジェクトデを作成します。
 poetry new my-package
-# プロジェクトのルートディレクトリにカレントディレクトリを変更します。
+# プロジェクトディレクトリをカレントディレクトリに変更します。
 cd my-package
-# `vscode`でカレントディレクトリを開きます。
+# `vscode`でプロジェクトディレクトリを開きます。
 code .
 ```
 
@@ -60,13 +61,8 @@ code .
 ```sh
 # プロジェクトで使用するpythonのバージョンを指定します。
 # .python-versionファイルが作成され、次のコマンドで指定したバージョンがそのファイルに記録されます。
-# ex. pyenv local 3.12.0
+# ex. `pyenv local 3.12.0`
 pyenv local <version>
-# 仮想環境を作成及び有効にします。
-poetry shell
-# poetryを使用することで明示的に仮想環境を有効にする必要がないため、仮想環境を無効化します。
-# deactivateで仮想環境を無効化できない場合、`source deactivate`を実行してください。
-deactivate
 # .gitignoreファイルをプロジェクトディレクトリに作成します（内容は後述）。
 vi .gitignore
 # gitリポジトリの初期化します。
@@ -235,7 +231,7 @@ ignore_missing_imports = true
 # 仮想環境にpre-commitをインストール
 poetry add pre-commit
 # pre-commitの設定ファイルを作成及び編集
-vi .pre-commit-config.yaml
+code .pre-commit-config.yaml
 # pre-commitをgitにインストール
 pre-commit install
 ```
@@ -282,10 +278,6 @@ type check with mypy.....................................................Passed
 ```
 
 ## `vscode`のエディタ設定
-
-`vscode`に次の拡張機能をインストールしてください。
-
-- `black`:
 
 `vscode`のエディタ設定を次の通り設定してください。
 
