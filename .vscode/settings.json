@@ -1,3 +1,16 @@
 {
-  "cSpell.words": ["mypy"]
+  "cSpell.words": [
+    "charliermarsh",
+    "isort",
+    "mypy",
+    "numpy",
+    "pycache",
+    "pycodestyle",
+    "pydocstyle",
+    "pyenv",
+    "pyflakes",
+    "pyproject",
+    "sdist",
+    "virtualenvs"
+  ]
 }
