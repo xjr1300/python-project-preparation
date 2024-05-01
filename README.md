@@ -166,10 +166,6 @@ ignore = [
 
 extend-ignore = []
 
-[tool.ruff.format]
-# 改行をLFに統一
-line-ending = "lf"
-
 [tool.ruff.lint.pydocstyle]
 # docstringはgoogle style
 convention = "google"
