@@ -334,6 +334,8 @@ type check with mypy.....................................................Passed
 
 `autoDocstring`は、クラスまたは関数定義の下で`"""`を入力すると、`docstring`を自動的に挿入します。
 
+<https://marketplace.visualstudio.com/items?itemName=njpwerner.autodocstring>
+
 ![autoDocstring](https://github.com/NilsJPWerner/autoDocstring/raw/master/images/demo.gif)
 
 ## 実装方針
