@@ -17,6 +17,8 @@
   - [その他`vscode`拡張機能の導入](#その他vscode拡張機能の導入)
   - [実装方針](#実装方針)
     - [`docstring`と型注釈](#docstringと型注釈)
+    - [関数やメソッドの引数や戻り値の型](#関数やメソッドの引数や戻り値の型)
+    - [型アノテーションについて](#型アノテーションについて)
     - [テスト](#テスト)
   - [実装例](#実装例)
     - [`my_package`プログラムを実装する例](#my_packageプログラムを実装する例)
@@ -26,7 +28,8 @@
 
 - `poetry`でプロジェクト及びパッケージの依存関係を管理
 - `ruff`でコードを検証及び整形
-- `mypy`でタイプセーフなコードを記述
+- `mypy`でタイプセーフなコードを記述することを目指す（あくまで目標）
+- `pre-commit`でリポジトリにコミットする前にコードを整形
 
 ## `pyenv`と`poetry`のインストール
 
@@ -249,12 +252,13 @@ repos:
       # フォーマッターの実行
       - id: ruff-format
         name: format with ruff
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.10.0    # mypyバージョン
-    hooks:
-      # タイプチェックの実行
-      - id: mypy
-        name: type check with mypy
+#  - repo: https://github.com/pre-commit/mirrors-mypy
+#    rev: v1.10.0    # mypyバージョン
+#    hooks:
+#      # タイプチェックの実行
+#      - id: mypy
+#        name: type check with mypy
+#        args: [--strict, --ignore-missing-imports]
 ```
 
 ローカルリポジトリにコミットするとき、実際にコミットされる前に次の通り`pre-commit`が実行されます。
@@ -334,10 +338,21 @@ type check with mypy.....................................................Passed
 
 ### `docstring`と型注釈
 
+- 可能な限り関数やメソッドの引数及び戻り値の型を`type hint`で注釈（アノテーション）すること
 - 関数やクラスの説明を`docstring`で記述すること
 - 関数やメソッドの引数及び戻り値の説明を`docstring`で記述すること
-- 関数やメソッドの引数及び戻り値（シグネチャ）の型を明記すること
 - ファイルレベルの変数を定義する場合、その変数の用途を`docstring`で記述して、型を明記すること
+
+### 関数やメソッドの引数や戻り値の型
+
+- データ構造を関数やメソッドの引数や戻り値に使用する場合、[dataclass](https://docs.python.org/3/library/dataclasses.html)や[enum](https://docs.python.org/3/library/enum.html)を使用すること
+  - 辞書やタプルの使用は関数やメソッドのスコープ内に限定して、関数やメソッドの仕様を明確にする
+
+### 型アノテーションについて
+
+- 型アノテーションは、[Type hints cheat sheet](https://mypy.readthedocs.io/en/stable/cheat_sheet_py3.html)を参照して記述すること
+- サードパーティーのライブラリの型アノテーションに頑張り過ぎないこと
+  - 注釈が難しい場合は`Any`型で注釈することも可
 
 ### テスト
 
@@ -346,7 +361,7 @@ type check with mypy.....................................................Passed
 - 単体テスト及び統合テストの名前（関数名など）は、上記説明を表現したものにすること
 - 単体テストでは1つの振る舞いを検証すること
 - 各テストは実装の詳細を検証せず、観測可能な振る舞いを検証すること（ブラックボックステスト）
-- テストは限界値テストなどのプラクティスに従うこと
+- テストは限界値テストなどの慣習に従うこと
 
 ## 実装例
 

@@ -11,9 +11,10 @@ repos:
       # フォーマッターの実行
       - id: ruff-format
         name: format with ruff
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.10.0 # mypyバージョン
-    hooks:
-      # タイプチェックの実行
-      - id: mypy
-        name: type check with mypy
+#  - repo: https://github.com/pre-commit/mirrors-mypy
+#    rev: v1.10.0    # mypyバージョン
+#    hooks:
+#      # タイプチェックの実行
+#      - id: mypy
+#        name: type check with mypy
+#        args: [--strict, --ignore-missing-imports]
