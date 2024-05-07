@@ -16,6 +16,7 @@
     - [改行コードについて](#改行コードについて)
   - [その他`vscode`拡張機能の導入](#その他vscode拡張機能の導入)
   - [実装方針](#実装方針)
+    - [`import`文](#import文)
     - [`docstring`と型注釈](#docstringと型注釈)
     - [関数やメソッドの引数や戻り値の型](#関数やメソッドの引数や戻り値の型)
     - [型アノテーションについて](#型アノテーションについて)
@@ -336,9 +337,24 @@ type check with mypy.....................................................Passed
 可能な限り[PEP8](https://pep8-ja.readthedocs.io/ja/latest/)に従い、コードを記述してください。
 上記を設定した場合、`ruff`がPEP8に準拠しているか、自動的に検証して整形します。
 
+### `import`文
+
+- `import`文は、標準ライブラリ、サードパーティーライブラリ、ローカルライブラリの順に記述すること
+- 各`import`グループでは、`import`文、`from ... import ...`文の順に記述すること
+
+```python
+import io
+from datetime import datetime, timedelta
+
+import numpy as np
+from django.db import models
+
+from my_package import my_module
+```
+
 ### `docstring`と型注釈
 
-- 可能な限り関数やメソッドの引数及び戻り値の型を`type hint`で注釈（アノテーション）すること
+- **可能な限り**関数やメソッドの引数及び戻り値の型を`type hint`で型注釈（型アノテーション）すること
 - 関数やクラスの説明を`docstring`で記述すること
 - 関数やメソッドの引数及び戻り値の説明を`docstring`で記述すること
 - ファイルレベルの変数を定義する場合、その変数の用途を`docstring`で記述して、型を明記すること
@@ -346,13 +362,16 @@ type check with mypy.....................................................Passed
 ### 関数やメソッドの引数や戻り値の型
 
 - データ構造を関数やメソッドの引数や戻り値に使用する場合、[dataclass](https://docs.python.org/3/library/dataclasses.html)や[enum](https://docs.python.org/3/library/enum.html)を使用すること
-  - 辞書やタプルの使用は関数やメソッドのスコープ内に限定して、関数やメソッドの仕様を明確にする
+  - 辞書やタプルの使用は関数やメソッドのスコープ内に限定して、関数やメソッドの仕様を明確にすること
+  - 妥当な理由で引数や戻り値の型を辞書やタプルを使用する場合、辞書やタプルの使用を`docstring`で説明すること
 
 ### 型アノテーションについて
 
 - 型アノテーションは、[Type hints cheat sheet](https://mypy.readthedocs.io/en/stable/cheat_sheet_py3.html)を参照して記述すること
 - サードパーティーのライブラリの型アノテーションに頑張り過ぎないこと
   - 注釈が難しい場合は`Any`型で注釈することも可
+- `pandas.DataFrame`など、型アノテーションしてもデータの仕様が明確でない場合、データの使用を`docstring`で説明すること
+  - `pandas.DataFrame`の場合、列名やデータ型などを説明すること
 
 ### テスト
 
