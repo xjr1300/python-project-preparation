@@ -32,6 +32,8 @@
 - `mypy`でタイプセーフなコードを記述することを目指す（あくまで目標）
 - `pre-commit`でリポジトリにコミットする前にコードを整形
 
+`poetry`の基本的な使用方法は、[ここ](https://python-poetry.org/docs/basic-usage/)を参照してください。
+
 ## `pyenv`と`poetry`のインストール
 
 `pyenv`は、[ここ](https://github.com/pyenv/pyenv?tab=readme-ov-file#installation)を参照してインストールしてください。
@@ -51,6 +53,14 @@ poetry config virtualenvs.in-project true
 次の通り、ターミナルで`poetry`を実行してプロジェクトを作成します。
 
 ここでは、[`poetry`標準のプロジェクトディレクトリ構成](https://python-poetry.org/docs/basic-usage/#project-setup)を採用します。
+
+> 本当は、[srcレイアウト](https://python-poetry.org/docs/basic-usage/)の方が望ましいと考えています。
+> しかし、`poetry`を経由した**理想的なモジュールの実行方法**が分からなかったため、`poetry`の標準のプロジェクトディレクトリ構成を採用しました。
+> なお、`poetry`で`src`レイアウトでプロジェクトを作成する方法は次です。
+>
+> ```sh
+> poetry new --src <package name>
+> ```
 
 作成したプロジェクトのモジュールは、[`-m`オプションを使用することで実行](https://docs.python.org/ja/3/using/cmdline.html#cmdoption-m)できます。
 
