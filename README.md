@@ -32,7 +32,15 @@
 - `mypy`でタイプセーフなコードを記述することを目指す（あくまで目標）
 - `pre-commit`でリポジトリにコミットする前にコードを整形（将来的には静的型検査もしたい）
 
-`poetry`の基本的な使用方法は、[ここ](https://python-poetry.org/docs/basic-usage/)を参照してください。
+`poetry`については、[ここ](https://python-poetry.org/docs/)を参照してください。
+
+`ruff`については、[ここ](https://docs.astral.sh/ruff/)を参照してください。
+
+`mypy`については、[ここ](https://mypy.readthedocs.io/en/stable/)を参照してください。
+
+`pre-commit`については、[ここ](https://pre-commit.com/)を参照してください。
+
+`ruff`と`pre-commit`の連携については、[ここ](https://github.com/astral-sh/ruff-pre-commit)を参照してください。
 
 ## `pyenv`と`poetry`のインストール
 
