@@ -49,6 +49,18 @@ poetry config virtualenvs.in-project true
 ## プロジェクトの準備方法
 
 次の通り、ターミナルで`poetry`を実行してプロジェクトを作成します。
+
+ここでは、[`poetry`標準のプロジェクトディレクトリ構成](https://python-poetry.org/docs/basic-usage/#project-setup)を採用します。
+
+作成したプロジェクトのモジュールは、[`-m`オプションを使用することで実行](https://docs.python.org/ja/3/using/cmdline.html#cmdoption-m)できます。
+
+```sh
+# poetryを使用しないときの実行方法
+python -m <module name>
+# poetryを使用するときの実行方法
+poetry run python -m <module name>
+```
+
 作成されたプロジェクトディレクトリをカレントディレクトリに変更後、プロジェクトディレクトリを`vscode`を開きます。
 
 ```sh
