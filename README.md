@@ -263,7 +263,7 @@ poetry add pre-commit
 # pre-commitの設定ファイルを作成及び編集
 code .pre-commit-config.yaml
 # pre-commitをgitにインストール
-pre-commit install
+poetry run pre-commit install
 ```
 
 - `.pre-commit-config.yaml`ファイルの内容
@@ -295,7 +295,7 @@ repos:
 
 ```sh
 % git add --all
-% git commit -m "Implement the sample program."
+% git commit -m "Build the environment."
 lint with ruff...........................................................Passed
 sort imports with ruff...................................................Passed
 format with ruff.........................................................Passed
@@ -310,7 +310,7 @@ type check with mypy.....................................................Passed
 
 ## `vscode`のエディタ設定
 
-`vscode`のエディタ設定を次の通り設定してください。
+`vscode`のエディタ設定を次の通り設定します。
 
 - ファイルの文字コードは`UTF-8`（デフォルトで`UTF-8`であるため、`UTF-8`以外になっていないか確認）
 - ファイルの末尾に改行を挿入
@@ -323,7 +323,8 @@ type check with mypy.....................................................Passed
   - 自動的にすべての問題を修正
   - 自動的に`import`文を整理
 
-`vscode`に次の設定が指定されているか確認してください。
+`vscode`のコマンドパレットを開いて、`Preferences: Open Settings (JSON)`を入力／選択して、ユーザー設定ファイルを表示します。
+ユーザー設定ファイルに、次に示した設定が存在するか確認してください。
 
 ```json
 {
@@ -344,9 +345,9 @@ type check with mypy.....................................................Passed
 
 ### 改行コードについて
 
-改行コードは`LF`に統一してください。
-ただし、`OSS`に貢献する場合があり、その場合`OSS`のルールに従う必要があります。
-よって、`vscode`で改行コードを`LF`に制限していません。
+改行コードは`LF`にしてください。
+
+ただし、`OSS`に貢献する場合、`OSS`のルールに従う必要があるため、`vscode`で改行コードを`LF`に強制することをしません。
 
 ## その他`vscode`拡張機能の導入
 
