@@ -62,14 +62,6 @@ poetry config virtualenvs.in-project true
 
 ここでは、[`poetry`標準のプロジェクトディレクトリ構成](https://python-poetry.org/docs/basic-usage/#project-setup)を採用します。
 
-> 本当は、[srcレイアウト](https://python-poetry.org/docs/basic-usage/)の方が望ましいと考えています。
-> しかし、`poetry`を経由した**理想的なモジュールの実行方法**が分からなかったため、`poetry`の標準のプロジェクトディレクトリ構成を採用しました。
-> なお、`poetry`で`src`レイアウトでプロジェクトを作成する方法は次です。
->
-> ```sh
-> poetry new --src <package name>
-> ```
-
 作成したプロジェクトのモジュールは、[`-m`オプションを使用することで実行](https://docs.python.org/ja/3/using/cmdline.html#cmdoption-m)できます。
 
 ```sh
@@ -464,6 +456,23 @@ from common import message
 if __name__ == "__main__":
     print("Hello, other-package!")
     print(message())
+```
+
+最後に、`pyproject.toml`を編集して、`common`モジュールと`other_package`モジュールを`ruff`のリント及びフォーマット対象にします（`mypy`の検証対象にします）。
+
+```toml
+# pyproject.toml
+
+# モジュールディレクトリとテストディレクトリ
+-src = ["my_package", "tests"]
++src = ["common", "my_package", "other_package", "tests"]
+
+# ...snip...
+
+ [tool.mypy]
+ strict = true
+-mypy_path = ["my_package", "tests"]
+-mypy_path = ["common", "my_package", "other_package", "tests"]
 ```
 
 `other_package`プログラムは次の通り実行できます。
