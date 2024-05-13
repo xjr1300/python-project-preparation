@@ -98,7 +98,7 @@ code .
 # ex. `pyenv local 3.12.0`
 pyenv local <version>
 # .gitignoreファイルをプロジェクトディレクトリに作成します（内容は後述）。
-vi .gitignore
+code .gitignore
 # gitリポジトリの初期化します。
 git init
 # 変更をステージングします。
@@ -153,7 +153,6 @@ venv/
   ├── .git              # gitリポジトリ
   ├── .gitignore        # git追跡対象外設定ファイル
   ├── .python-version   # pyenvのバージョン設定ファイル
-  ├── .venv             # python仮想環境
   ├── README.md
   ├── my_package        # my_packageモジュールディレクトリ
   │   └── __init__.py
@@ -252,11 +251,11 @@ module = ["shapely.geometry"]
 
 `vscode`に`Mypy Type Checker`拡張機能をインストールします。
 
-その後、`vscode`の設定の`Python > Analysis: Type Checking Mode`を`strict`に設定します。
+その後、`vscode`の設定を開いて`Python > Analysis: Type Checking Mode`を`strict`に設定します。
 
 ## pre-commit導入
 
-ローカルリポジトリにコミットする前に、リンター、フォーマッター及び型検証を実行するために、`pre-commit`を導入します。
+ローカルリポジトリにコミットする前に、リンター、フォーマッター（または型検証）を実行するために、`pre-commit`を導入します。
 
 ```sh
 # 仮想環境にpre-commitをインストール
