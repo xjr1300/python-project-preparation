@@ -21,9 +21,16 @@
     - [関数やメソッドの引数や戻り値の型](#関数やメソッドの引数や戻り値の型)
     - [型アノテーションについて](#型アノテーションについて)
     - [テスト](#テスト)
-  - [実装例](#実装例)
+  - [実装例1](#実装例1)
     - [`my_package`プログラムを実装する例](#my_packageプログラムを実装する例)
     - [プロジェクトにモジュールと別プログラムを実装する例](#プロジェクトにモジュールと別プログラムを実装する例)
+  - [実装例2](#実装例2)
+    - [calcプロジェクトの作成と設定](#calcプロジェクトの作成と設定)
+    - [サブコマンドの実装](#サブコマンドの実装)
+    - [コマンドラインインターフェースの作成](#コマンドラインインターフェースの作成)
+    - [エントリポイントの作成](#エントリポイントの作成)
+    - [プログラムの実行](#プログラムの実行)
+  - [実装例3](#実装例3)
 
 ## 方針
 
@@ -404,7 +411,7 @@ from my_package import my_module
 - 各テストは実装の詳細を検証せず、観測可能な振る舞いを検証すること（ブラックボックステスト）
 - テストは限界値テストなどの慣習に従うこと
 
-## 実装例
+## 実装例1
 
 ### `my_package`プログラムを実装する例
 
@@ -509,3 +516,256 @@ poetry run python -m other_package
 └── tests
     └── __init__.py
 ```
+
+ファイルシステムを構成後、リポジトリにコミットします。
+
+```sh
+git add --all
+git commit -m "Implement the my-package."
+```
+
+## 実装例2
+
+前回実装した`my_package`プロジェクトでは、`my_package`と`other_package`を実行できるようにしました。
+
+しかし、2つのプログラムを実装した後、リンター及びフォーマッターまたは静的型検証を実行するために、`pyproject.toml`を編集する必要がありました。
+もし、`pyproject.toml`を編集することを忘れた場合、リンターなどの対象外になり、リポジトリをチームで共有する場合に問題が発生する可能性があります。
+
+これを解決するために、標準ライブラリの`argparse`モジュールを使用して、サブコマンドを実装して、1つのプログラムで複数の処理をできるように実装します。
+
+### calcプロジェクトの作成と設定
+
+`calc`プロジェクトを作成して、`calc`プロジェクトを次の通り設定します。
+
+```sh
+#
+# プロジェクト作成
+#
+# calcプロジェクトを作成
+poetry new calc
+# calcディレクトリに移動
+cd calc
+# calcディレクトリをvscodeで開く
+code .
+# calcプロジェクトで使用するpythonバージョンを指定
+pyenv local 3.12.0
+# git除外ファイルの作成（内容は上記同様）
+code .gitignore
+# calcリポジトリの作成及び初期化
+git init
+# 変更をステージング
+git add --all
+# ステージングした内容をリポジトリにコミット
+git commit -m "初期コミット"
+
+#
+# プロジェクトの環境設定
+#
+# ruff, mypy, pre-commitを仮想環境にインストール（同時に仮想環境が作成される）
+poetry add ruff mypy pre-commit
+# pyproject.tomlファイルを編集（内容は上記の`my_package`を`calc`に変更
+code pyproject.toml
+# .pre-commit-config.yamlファイルを作成及び編集（内容は上記同様）
+code .pre-commit-config.yaml
+# pre-commitをgitにインストール
+poetry run pre-commit install
+# 変更をステージング
+git add --all
+# ステージングした内容をリポジトリにコミット
+git commit -m "プロジェクトの環境を設定"
+```
+
+### サブコマンドの実装
+
+整数を加算、減算、乗算、整数除算する関数をそれぞれモジュールに実装します。
+
+```sh
+# モジュールディレクトリを作成
+mkdir calc/{add,sub,mul,div}
+# 上記で作成したディレクトリがモジュールとして認識されるように__init__.pyファイルを作成
+touch calc/{add,sub,mul,div}/__init__.py
+```
+
+それぞのモジュールの`__init__.py`ファイルに次の通り実装します。
+
+```python
+# calc/add/__init__.py
+def add(x: int, y: int) -> int:
+    """整数を加算する。
+
+    Args:
+        x (int): 演算子の左辺の値
+        y (int): 演算子の右辺の値
+
+    Returns:
+        int: 加算した結果結果
+    """
+    return x + y
+```
+
+```python
+# calc/sub/__init__.py
+def sub(x: int, y: int) -> int:
+    """整数を減算する。
+
+    Args:
+        x (int): 演算子の左辺の値
+        y (int): 演算子の右辺の値
+
+    Returns:
+        int: 減算した結果結果
+    """
+    return x - y
+```
+
+```python
+# calc/mul/__init__.py
+def mul(x: int, y: int) -> int:
+    """整数を乗算する。
+
+    Args:
+        x (int): 演算子の左辺の値
+        y (int): 演算子の右辺の値
+
+    Returns:
+        int: 乗算した結果結果
+    """
+    return x * y
+```
+
+```python
+# calc/div/__init__.py
+def div(x: int, y: int) -> int:
+    """整数を整数除算する。
+
+    Args:
+        x (int): 演算子の左辺の値
+        y (int): 演算子の右辺の値
+
+    Returns:
+        int: 整数除算した結果結果
+
+    Raises:
+        ZeroDivisionError
+    """
+    try:
+        return x // y
+    except ZeroDivisionError:
+        raise
+```
+
+サブコマンドを実装後、変更内容をステージングしてリポジトリにコミットします。
+
+```sh
+git add --all
+git commit -m "add, sub, mul, divモジュールを実装"
+```
+
+### コマンドラインインターフェースの作成
+
+`calc/__main__.py`ファイルを作成して、コマンドラインインターフェースを次の通り実装します。
+
+```python
+# calc/__main__.py
+import argparse
+
+
+def create_parser() -> argparse.ArgumentParser:
+    """コマンドラインを解析するオブジェクトを作成して返す。
+
+    Returns:
+        argparse.ArgumentParser: コマンドラインパーサー
+    """
+    parser = argparse.ArgumentParser(
+        prog="CLI Calculator",
+    )
+    parser.add_argument("operator", type=str, choices=("add", "sub", "mul", "div"), help="Select operator")
+    parser.add_argument("left", type=int, help="left-hand operand")
+    parser.add_argument("right", type=int, help="right-hand operand")
+    return parser
+```
+
+コマンドラインインターフェースを実装した後、変更内容をステージングしてリポジトリにコミットします。
+
+```sh
+git add --all
+git commit -m "コマンドラインを解析するオブジェクトを実装"
+```
+
+### エントリポイントの作成
+
+`calc/__main__.py`ファイルに次の通りエントリポイントを実装します。
+
+```python
+ import argparse
+
++from .add import add
++from .div import div
++from .mul import mul
++from .sub import sub
+
+...snip...
+
+
++def main(operator: str, left: int, right: int) -> None:
++    """2つの整数を演算した結果を標準出力に出力する。
++
++    Args:
++        operator (str): 演算子
++        left (int): 演算子の左辺値
++        right (int): 演算子の右辺値
++    """
++    if operator == "add":
++        sign = "+"
++        result = add(left, right)
++    elif operator == "sub":
++        sign = "-"
++        result = sub(left, right)
++    elif operator == "mul":
++        sign = "*"
++        result = mul(left, right)
++    else:
++        sign = "//"
++        result = div(left, right)
++    print(f"{left} {sign} {right} = {result}")
++
++
++if __name__ == "__main__":
++    parser = create_parser()
++    args = parser.parse_args()
++    main(args.operator, args.left, args.right)
+```
+
+### プログラムの実行
+
+```sh
+% poetry run python -m calc add 5 2
+5 + 2 = 7
+% poetry run python -m calc sub 5 2
+5 - 2 = 3
+% poetry run python -m calc mul 5 2
+5 * 2 = 10
+% poetry run python -m calc div 5 2
+5 // 2 = 2
+% poetry run python -m calc div 5 0
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/Users/xjr1300/examples/calc/calc/__main__.py", line 50, in <module>
+    main(args.operator, args.left, args.right)
+  File "/Users/xjr1300/examples/calc/calc/__main__.py", line 43, in main
+    result = div(left, right)
+             ^^^^^^^^^^^^^^^^
+  File "/Users/xjr1300/examples/calc/calc/div/__init__.py", line 15, in div
+    return x // y
+           ~~^^~~
+ZeroDivisionError: integer division or modulo by zero
+```
+
+## 実装例3
+
+`argparse`モジュールを使用して、サブコマンドを実装すると、サブコマンドごとに引数を定義でします。
+
+[サブコマンド](https://docs.python.org/ja/3/library/argparse.html#sub-commands)
+
+サブコマンドを利用することで`django`の`manage.py`スクリプトのようなコマンドラインインターフェースを実装できます。
