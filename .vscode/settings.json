@@ -1,6 +1,7 @@
 {
   "cSpell.words": [
     "charliermarsh",
+    "fibo",
     "isort",
     "mypy",
     "numpy",
@@ -10,6 +11,7 @@
     "pyenv",
     "pyflakes",
     "pyproject",
+    "runpy",
     "sdist",
     "timedelta",
     "virtualenvs"

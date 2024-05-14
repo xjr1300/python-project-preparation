@@ -26,11 +26,16 @@
     - [プロジェクトにモジュールと別プログラムを実装する例](#プロジェクトにモジュールと別プログラムを実装する例)
   - [実装例2](#実装例2)
     - [calcプロジェクトの作成と設定](#calcプロジェクトの作成と設定)
-    - [サブコマンドの実装](#サブコマンドの実装)
+    - [演算する関数の実装](#演算する関数の実装)
     - [コマンドラインインターフェースの作成](#コマンドラインインターフェースの作成)
     - [エントリポイントの作成](#エントリポイントの作成)
-    - [プログラムの実行](#プログラムの実行)
+    - [プログラムの実行例](#プログラムの実行例)
+    - [リポジトリに変更をコミット](#リポジトリに変更をコミット)
   - [実装例3](#実装例3)
+    - [calc2プロジェクトの作成と設定](#calc2プロジェクトの作成と設定)
+    - [コマンドラインインターフェースとエントリポイントの実装](#コマンドラインインターフェースとエントリポイントの実装)
+    - [プログラムの実行例](#プログラムの実行例-1)
+    - [リポジトリに変更をコミット](#リポジトリに変更をコミット-1)
 
 ## 方針
 
@@ -531,7 +536,9 @@ git commit -m "Implement the my-package."
 しかし、2つのプログラムを実装した後、リンター及びフォーマッターまたは静的型検証を実行するために、`pyproject.toml`を編集する必要がありました。
 もし、`pyproject.toml`を編集することを忘れた場合、リンターなどの対象外になり、リポジトリをチームで共有する場合に問題が発生する可能性があります。
 
-これを解決するために、標準ライブラリの`argparse`モジュールを使用して、サブコマンドを実装して、1つのプログラムで複数の処理をできるように実装します。
+これを解決するために、標準ライブラリの`argparse`モジュールを使用して、1つのプログラムで複数の処理をできるように実装します。
+
+これにより、実装例1では、`ruff`や`mypy`の対象となるディレクトリを追加しましたが、今回は追加する必要がなくなります。
 
 ### calcプロジェクトの作成と設定
 
@@ -575,7 +582,7 @@ git add --all
 git commit -m "プロジェクトの環境を設定"
 ```
 
-### サブコマンドの実装
+### 演算する関数の実装
 
 整数を加算、減算、乗算、整数除算する関数をそれぞれモジュールに実装します。
 
@@ -654,7 +661,7 @@ def div(x: int, y: int) -> int:
         raise
 ```
 
-サブコマンドを実装後、変更内容をステージングしてリポジトリにコミットします。
+演算する関数を実装後、変更内容をステージングしてリポジトリにコミットします。
 
 ```sh
 git add --all
@@ -736,7 +743,7 @@ git commit -m "コマンドラインを解析するオブジェクトを実装"
 +    main(args.operator, args.left, args.right)
 ```
 
-### プログラムの実行
+### プログラムの実行例
 
 ```sh
 % poetry run python -m calc add 5 2
@@ -762,10 +769,120 @@ Traceback (most recent call last):
 ZeroDivisionError: integer division or modulo by zero
 ```
 
+### リポジトリに変更をコミット
+
+```sh
+git add --all
+git commit -m "エントリポイントを実装"
+```
+
 ## 実装例3
 
-`argparse`モジュールを使用して、サブコマンドを実装すると、サブコマンドごとに引数を定義でします。
+`argparse`モジュールのサブコマンドを利用すると、サブコマンドごとに異なる引数を定義できます。
 
 [サブコマンド](https://docs.python.org/ja/3/library/argparse.html#sub-commands)
 
 サブコマンドを利用することで`django`の`manage.py`スクリプトのようなコマンドラインインターフェースを実装できます。
+
+ここでは、引数を1つ受け取りフィボナッチ数を計算するサブコマンドと、引数を2つ受け取りそれらの最大公約数を計算するサブコマンドを実装します。
+
+### calc2プロジェクトの作成と設定
+
+`calc`プロジェクトと同様に`calc2`プロジェクトを作成してください。
+
+### コマンドラインインターフェースとエントリポイントの実装
+
+`calc2/__main__.py`ファイルに次の通りコマンドラインインターフェースとエントリポイントを実装します。
+
+```python
+import math
+from argparse import ArgumentParser, Namespace
+
+
+def fibonacci(n: int) -> int:
+    """フィボナッチ数を計算する。
+
+    Args:
+        n (int): フィボナッチ数の項
+
+    Returns:
+        int: フィボナッチ数
+    """
+    if n == 0:
+        return 0
+    elif n == 1:
+        return 1
+    return fibonacci(n - 1) + fibonacci(n - 2)
+
+
+def calc_fibo(args: Namespace) -> None:
+    """フィボナッチ数を計算して、その結果を標準出力に出力する。
+
+    Args:
+        args (Namespace): コマンドライン引数
+    """
+    result = fibonacci(args.number)
+    print(f"fibonacci({args.number}) = {result}")
+
+
+def calc_gcd(args: Namespace) -> None:
+    """2つの整数の最大公約数を計算して、その結果を標準出力に出力する。
+
+    Args:
+        args (Namespace): コマンドライン引数
+    """
+    result = math.gcd(args.x, args.y)
+    print(f"gcd({args.x}, {args.y}) = {result}")
+
+
+def create_parser() -> ArgumentParser:
+    """コマンドライン引数を解析するオブジェクトを作成して返す。
+
+    python -m calc2 fibo <number>
+    python -m calc2 gcd <x> <y>
+
+    Returns:
+        ArgumentParser: コマンドライン引数を解析するオブジェクト
+    """
+    parser = ArgumentParser(prog="CLI Calculator2")
+    sub_parsers = parser.add_subparsers(help="Sub-command help")
+    # fiboサブコマンド
+    fibo_parser = sub_parsers.add_parser("fibo", help="Fibonacci number")
+    fibo_parser.add_argument("number", type=int, help="Term of the Fibonacci number")
+    fibo_parser.set_defaults(func=calc_fibo)
+    # gcdサブコマンド
+    gcd_parser = sub_parsers.add_parser("gcd", help="Greatest common divisor")
+    gcd_parser.add_argument("x", type=int, help="Greatest common divisor of x")
+    gcd_parser.add_argument("y", type=int, help="Greatest common divisor of y")
+    gcd_parser.set_defaults(func=calc_gcd)
+    return parser
+
+
+if __name__ == "__main__":
+    parser = create_parser()
+    args = parser.parse_args()
+    args.func(args)
+```
+
+### プログラムの実行例
+
+```sh
+ % poetry run python -m calc2 fibo 0
+fibonacci(0) = 0
+ % poetry run python -m calc2 fibo 1
+fibonacci(1) = 1
+ % poetry run python -m calc2 fibo 10
+fibonacci(10) = 55
+
+poetry run python -m calc2 gcd 18 30
+gcd(18, 30) = 6
+% poetry run python -m calc2 gcd 60 72
+gcd(60, 72) = 12
+```
+
+### リポジトリに変更をコミット
+
+```sh
+git add --all
+git commit -m "計算機2を実装"
+```
