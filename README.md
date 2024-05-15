@@ -184,7 +184,7 @@ poetry add ruff
 src = ["my_package", "tests"]
 
 # 1行の最大文字数
-line-length = 118
+line-length = 88
 
 [tool.ruff.lint]
 select = [
