@@ -180,6 +180,9 @@ poetry add ruff
 ```toml
 [tool.ruff]
 
+# ターゲットバージョン
+target-version = "py312"
+
 # モジュールディレクトリとテストディレクトリ
 src = ["my_package", "tests"]
 
